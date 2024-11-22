@@ -1,0 +1,59 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="index.js" type="module"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gasoek+One&family=Parkinsans:wght@300..800&family=SUSE:wght@100..800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app">
+        <div id="lang-select" v-if="shouldRender">
+            <div id="ticker-container">
+                <p class="marquee">
+                    <span>Hello! Hola! Bonjour! يوم جيد 你好! Привет! Hello! Hola! Bonjour! يوم جيد 你好! Привет! Hello! Hola! Bonjour! يوم جيد 你好! Привет! Hello! Hola! Bonjour! يوم جيد 你好! Привет! -&nbsp;</span>
+                </p>
+                <p class="marquee marquee2">
+                    <span>Hello! Hola! Bonjour! يوم جيد 你好! Привет! Hello! Hola! Bonjour! يوم جيد 你好! Привет! Hello! Hola! Bonjour! يوم جيد 你好! Привет! Hello! Hola! Bonjour! يوم جيد 你好! Привет! -&nbsp;</span>
+                </p>
+            </div>
+
+            <div id="flag-container" >
+                <div class="flag-icon" id="flag-en" @click="() => handleFlagClick('en')" >
+                    <img src="./images/flag-en.png">
+                </div>
+                <div class="flag-icon" id="flag-es" @click="() => handleFlagClick('es')">
+                    <img src="./images/flag-es.png">
+                </div>
+                <div class="flag-icon" id="flag-fr" @click="() => handleFlagClick('fr')">
+                    <img src="./images/flag-fr.png">
+                </div>
+                <div class="flag-icon" id="flag-ar" @click="() => handleFlagClick('ar')">
+                    <img src="./images/flag-ar.png">
+                </div>
+                <div class="flag-icon" id="flag-ru" @click="() => handleFlagClick('ru')">
+                    <img src="./images/flag-ru.png">
+                </div>
+                <div class="flag-icon" id="flag-cn" @click="() => handleFlagClick('cn')">
+                    <img src="./images/flag-cn.png">
+                </div>
+
+            </div>
+        </div>
+
+        <div id="info-screen" v-if="!shouldRender">
+            <h1> Title</h1>
+            <p>Info Paragraph</p>
+            <p>Language: {{ language }}</p>
+            <button @click="returnHome">Go Back</button>
+        </div>
+    </div>
+</body>
+</html>
