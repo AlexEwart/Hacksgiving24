@@ -49,6 +49,12 @@ class webcamBackend:
                 b"--frame\r\n"
                 b"Content-Type: image/jpeg\r\n\r\n" + self.last_frame + b"\r\n\r\n"
             )
+    def capture_frame(self):
+        if self.cap and self.cap.isOpened():
+            ret, frame = self.cap.read()
+            if ret:
+                return frame
+        return None
 
     def stop_webcam(self):
         self.streaming = False  # Set streaming flag to False to stop the feed
