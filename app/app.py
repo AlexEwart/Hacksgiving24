@@ -77,6 +77,7 @@ def prompt_gpt(img_path, prompt_data):
 # Initialize Flask app and webcam backend
 app = Flask(__name__)
 webcam = webcamBackend()
+data = pd.DataFrame()
 
 @app.after_request
 def add_cors_headers(response):
@@ -170,3 +171,5 @@ def index():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
+# %%
