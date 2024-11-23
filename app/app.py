@@ -3,14 +3,20 @@ import cv2
 import base64
 from webcambackend import webcamBackend
 import numpy as np
+import pandas as pd
 import openai
 
 # Initialize Flask app and webcam backend
 app = Flask(__name__)
 webcam = webcamBackend()
+data = pd.DataFrame()
 
+# %%
+def read_data():
+    data = pd.read_excel('../data.xlsx', index_col=0, header=None)
+    return data
 
-
+# %%
 # Route to serve the video feed
 @app.route("/video_feed")
 def video_feed():
@@ -83,3 +89,5 @@ def index():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
+# %%
