@@ -11,13 +11,13 @@ import base64
 import json
 import pandas as pd
 
+
 data = pd.DataFrame()
 def read_data():
     data = pd.read_excel('../data.xlsx', index_col=0, header=None)
     return data
 
 data = read_data()
-
 # THIS SHOULD BE IN ENVIRONMENT FILE!!
 api_key = ""
 # API KEY IN HERE!!
@@ -77,7 +77,6 @@ def prompt_gpt(img_path, prompt_data):
 # Initialize Flask app and webcam backend
 app = Flask(__name__)
 webcam = webcamBackend()
-data = pd.DataFrame()
 
 @app.after_request
 def add_cors_headers(response):
