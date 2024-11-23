@@ -9,6 +9,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="styles.css" type="text/css" />
     <link href="https://fonts.googleapis.com/css2?family=Gasoek+One&family=Parkinsans:wght@300..800&family=SUSE:wght@100..800&display=swap" rel="stylesheet">
 
 </head>
@@ -47,15 +48,56 @@
         </div>
 
         <div id="info-screen" v-if="!shouldRender">
-            <h1>Title</h1>
+            <h1 id="head" class="display-3">Webcam Video Feed</h1>
             <p>Info Paragraph</p>
             <p>Language: {{ language }}</p>
             <button @click="returnHome">Go Back</button>
             <button id="capture-button" class="btn btn-primary mt-3" @click="takePicture">Take Picture</button>
-        </div>
-    </div>
+            
+            <!-- <img
+            id="video-stream"
+            src="{{ url_for('video_feed') }}"
+            width="640"
+            height="480"
+            /> -->
+            <!-- <br />
+            <button type="button" class="btn btn-success" onclick="startVideoFeed()">
+            Start Video Feed
+            </button>
+            <button type="button" class="btn btn-danger" onclick="stopVideoFeed()">
+            Stop Video Feed
+            </button> -->
 
+            <script id="video">
+            function stopVideoFeed() {
+                // Send POST request to stop the feed
+                fetch("/stop_feed", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                });
+                // Keep the src unchanged so the last frame remains visible
+            }
 
-
+            function startVideoFeed() {
+                // Send POST request to start the feed
+                fetch("/start_feed", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                }).then(() => {
+                // Temporarily clear the video stream and reset the src
+                const videoStream = document.getElementById("video-stream");
+                videoStream.src = ""; // Clear the src temporarily
+                setTimeout(() => {
+                    videoStream.src = "/video_feed"; // Reset src to start feed
+                }, 100); // Small delay to ensure feed is restarted
+                });
+            }
+            </script>
+                </div>
+            </div>
 </body>
 </html>

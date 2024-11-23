@@ -2,7 +2,6 @@ from flask import Flask, Response, render_template, jsonify, request
 import cv2
 import base64
 from webcambackend import webcamBackend
-from deepface import DeepFace
 import numpy as np
 import openai
 
@@ -33,12 +32,12 @@ def start_feed():
         {"message": "Video feed started" if success else "Failed to start video feed"}
     )
 
-@app.route("/initialize", methods=["POST"])
-def start_feed():
-    success = webcam.start_webcam()
-    return jsonify(
-        {"message": "Video feed started" if success else "Failed to start video feed"}
-    )
+# @app.route("/initialize", methods=["POST"])
+# def start_feed():
+#     success = webcam.start_webcam()
+#     return jsonify(
+#         {"message": "Video feed started" if success else "Failed to start video feed"}
+#     )
 
 
 
