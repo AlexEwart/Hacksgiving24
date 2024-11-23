@@ -8,8 +8,6 @@ from flask import Flask, Response, render_template, jsonify, request
 import cv2
 import base64
 from webcambackend import webcamBackend
-from deepface import DeepFace
-
 
 
 temp_image_path = "captured_image.jpg"

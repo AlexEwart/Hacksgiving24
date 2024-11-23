@@ -8,13 +8,39 @@ createApp({
   setup() {
     const shouldRender = ref(true); // Use ref to make it reactive
     const language = ref("en");
+    const title = ref("Loading...");
+    const body = ref("Loading...");
 
     function handleFlagClick(lang) {
       language.value = lang;
       shouldRender.value = false; // Update the value using `.value`
+
+      let req_string = "/gpt_prompt"
+      req_string += "?lang=" + lang
+      // change this to be changed per-terminal
+      req_string += "&title=" + "Build It!"
+      fetch(req_string, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }).then((response) => response.json())
+      .then((data) => {
+
+          let objectthing = JSON.parse(data)
+          
+          console.log(objectthing.youngest_age)
+          console.log(objectthing.info_title)
+          console.log(objectthing.info_body)
+    
+          // TODO: updating gui doesnt work for some reason...
+          title.value = objectthing.info_title 
+          body.value = objectthing.info_body
+      })
+      
     }
 
-    function returnHome() {
+    function returnHome() { 
       shouldRender.value = true;
     }
     function takePicture() {
@@ -57,6 +83,8 @@ createApp({
       returnHome,
       takePicture,
       language,
+      title,
+      body,
     };
   },
 }).mount("#app");

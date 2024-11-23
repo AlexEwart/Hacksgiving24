@@ -47,8 +47,8 @@
         </div>
 
         <div id="info-screen" v-if="!shouldRender">
-            <h1>Title</h1>
-            <p>Info Paragraph</p>
+            <h1>{{ title }}</h1>
+            <p>{{ body }}</p>
             <p>Language: {{ language }}</p>
             <button @click="returnHome">Go Back</button>
             <button id="capture-button" class="btn btn-primary mt-3" @click="takePicture">Take Picture</button>
