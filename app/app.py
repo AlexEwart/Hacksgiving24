@@ -37,11 +37,6 @@ AUDIO_PATH = "recording.wav"
 app = Flask(__name__)
 webcam = webcamBackend()
 
-
-
-
-
-
 def get_age():
     global AGE
     print("getting age")
@@ -127,6 +122,8 @@ def start_recording():
 def stop_recording():
     success = audio.stop_recording()
     prompt = client.transcribe(AUDIO_PATH)
+    if(prompt is None):
+        prompt = "unintelligible"
     return jsonify(talk(prompt)), 200
 
 @app.route("/")

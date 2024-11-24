@@ -46,21 +46,31 @@
                 </div>
             </div>
         </div>
-
+        <h1 class="info-title" v-if="!shouldRender">[[ title ]]</h1>
         <div id="info-screen" v-if="!shouldRender">
-            <h1>{{ title }}</h1>
-            <p>{{ body }}</p>
-            <p>Language: {{ language }}</p>
-            <button
-          id="record-button"
-          class="btn btn-primary mt-3"
-          @mousedown="startRecording"
-          @mouseup="stopRecording"
-        >
-          Record
-        </button>
-            <button @click="returnHome">Go Back</button>
-            <button id="capture-button" class="btn btn-primary mt-3" @click="takePicture">Take Picture</button>
+            <div id="lcol">
+                
+                <div id="button-container">
+                    
+                    <!-- <button id="capture-button" class="btn btn-primary mt-3" @click="takePicture">Take Picture</button> -->
+                    <button
+                            class="button"
+                    id="record-button"
+                    class="btn btn-primary mt-3"
+                    @mousedown="startRecording"
+                    @mouseup="stopRecording"
+                    >
+                        <img src="{{ url_for('static', filename='images/mic.png') }}">
+                    </button>
+                    <button class="button" @click="returnHome">
+                        <img src="{{ url_for('static', filename='images/back.png') }}">
+                    </button>
+                </div>
+            </div>
+            <div id="rcol">
+                <p class="info-body">[[ body ]]</p>
+
+            </div>
             
             <!-- <img
             id="video-stream"

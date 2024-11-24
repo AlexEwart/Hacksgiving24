@@ -5,6 +5,7 @@ import {
 let lastMessage = "";
 
 createApp({
+  delimiters: ["[[", "]]"], // Custom delimiters
   setup() {
     const shouldRender = ref(true); // Use ref to make it reactive
     const language = ref("en");
@@ -37,9 +38,8 @@ createApp({
           // console.log(objectthing.info_title);
           console.log(objectthing.body);
 
-          // TODO: updating gui doesnt work for some reason...
-          title.value = objectthing.info_title;
-          body.value = objectthing.info_body;
+          title.value = objectthing.title;
+          body.value = objectthing.body;
         });
     }
 
@@ -55,6 +55,8 @@ createApp({
     }
 
     function returnHome() {
+      title.value = "Loading...";
+      body.value = "Loading...";
       shouldRender.value = true;
     }
 
@@ -98,8 +100,7 @@ createApp({
             console.log(objectthing.body);
 
             // TODO: updating gui doesnt work for some reason...
-            title.value = objectthing.info_title;
-            body.value = objectthing.info_body;
+            body.value = objectthing.body;
           }
         })
         .catch((error) => {

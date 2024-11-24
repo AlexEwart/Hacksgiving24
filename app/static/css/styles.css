@@ -1,5 +1,8 @@
 body {
   overflow-x: hidden;
+  overflow-y: hidden;
+  background-color: #E5407A;
+  margin: 0px;
 }
 
 
@@ -37,7 +40,7 @@ body {
   font-weight: 4em;
   font-style: normal;
   height: 10%;
-
+  background-color: white;
 }
 
 .marquee span {
@@ -53,6 +56,57 @@ body {
 
 .marquee::after {
   height: 1px;
+}
+
+.info-title {
+  font-family: "Parkinsans", sans-serif;
+  font-size: 8em;
+  margin-bottom: 10px;
+  text-align: center;
+  background-color: #C6E6FA;
+}
+
+.info-body {
+  font-family: "Parkinsans", sans-serif;
+  font-size: 3em;
+  height: 90%;
+  overflow-y: scroll;
+  margin-top: 3px;
+}
+
+#info-screen {
+  display: flex;
+  height: 100%;
+  padding: 0% 2% 2% 2%;
+}
+
+#lcol {
+  width: 25%;
+  background-color: #C6E6FA;
+}
+
+#rcol {
+  width: 75%;
+  background-color: white;
+}
+
+.button {
+  width: 80%;
+  margin: auto;
+  background-color: white;
+  border: 5px solid black;
+  border-radius: 30px;
+  margin-top: 5px ;
+}
+.button img {
+  width: 100%;
+}
+
+#button-container {
+  height: 60%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
 }
 
 @keyframes marquee {
