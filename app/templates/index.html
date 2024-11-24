@@ -71,7 +71,7 @@
       #marquee-container {
         width: 30%;
         position: absolute;
-        left:50%;
+        left: 50%;
         overflow-x: hidden;
         height: 100px;
       }
@@ -203,28 +203,27 @@
         background-position: center; /* Center the image within the element */
       }
 
-
       /* width */
-::-webkit-scrollbar {
-  width: 20px;
-}
+      ::-webkit-scrollbar {
+        width: 20px;
+      }
 
-/* Track */
-::-webkit-scrollbar-track {
-    background-color: lightgray;
-  border-radius: 10px;
-}
- 
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: #d53a7a; 
-  border-radius: 10px;
-}
+      /* Track */
+      ::-webkit-scrollbar-track {
+        background-color: lightgray;
+        border-radius: 10px;
+      }
 
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: #b30000; 
-}
+      /* Handle */
+      ::-webkit-scrollbar-thumb {
+        background: #d53a7a;
+        border-radius: 10px;
+      }
+
+      /* Handle on hover */
+      ::-webkit-scrollbar-thumb:hover {
+        background: #b30000;
+      }
     </style>
 
     <meta charset="UTF-8" />
@@ -250,18 +249,18 @@
       <!-- Ticker Container (Pink Bar) -->
       <div id="ticker-container" v-if="shouldRender">
         <div id="marquee-container">
-            <p class="marquee ">
-                <span>
-                  Hello! Hola! Bonjour! يوم جيد 你好! Привет! Hello! Hola! Bonjour!
-                  يوم جيد 你好! Привет! Hello! Hola! Bonjour! يوم جيد 你好! Привет!
-                </span>
-              </p>
-            <p class="marquee marquee2">
-                <span>
-                  Hello! Hola! Bonjour! يوم جيد 你好! Привет! Hello! Hola! Bonjour!
-                  يوم جيد 你好! Привет! Hello! Hola! Bonjour! يوم جيد 你好! Привет!
-                </span>
-              </p>
+          <p class="marquee">
+            <span>
+              Hello! Hola! Bonjour! يوم جيد 你好! Привет! Hello! Hola! Bonjour!
+              يوم جيد 你好! Привет! Hello! Hola! Bonjour! يوم جيد 你好! Привет!
+            </span>
+          </p>
+          <p class="marquee marquee2">
+            <span>
+              Hello! Hola! Bonjour! يوم جيد 你好! Привет! Hello! Hola! Bonjour!
+              يوم جيد 你好! Привет! Hello! Hola! Bonjour! يوم جيد 你好! Привет!
+            </span>
+          </p>
         </div>
       </div>
 
@@ -275,40 +274,53 @@
           >
             <img src="{{ url_for('static', filename='images/flag-en.png') }}" />
           </div>
+
           <div
             class="flag-icon"
             id="flag-es"
-            @click="() => handleFlagClick('española')"
+            @click="() => handleFlagClick('spanish')"
           >
             <img src="{{ url_for('static', filename='images/flag-es.png') }}" />
           </div>
+
           <div
             class="flag-icon"
             id="flag-fr"
-            @click="() => handleFlagClick('française')"
+            @click="() => handleFlagClick('french')"
           >
             <img src="{{ url_for('static', filename='images/flag-fr.png') }}" />
           </div>
+
           <div
             class="flag-icon"
             id="flag-ar"
-            @click="() => handleFlagClick('الأسبانية')"
+            @click="() => handleFlagClick('arabic')"
           >
             <img src="{{ url_for('static', filename='images/flag-ar.png') }}" />
           </div>
+
           <div
             class="flag-icon"
             id="flag-ru"
-            @click="() => handleFlagClick('испанский')"
+            @click="() => handleFlagClick('russian')"
           >
             <img src="{{ url_for('static', filename='images/flag-ru.png') }}" />
           </div>
+
           <div
             class="flag-icon"
             id="flag-cn"
-            @click="() => handleFlagClick('西班牙语')"
+            @click="() => handleFlagClick('chineese')"
           >
             <img src="{{ url_for('static', filename='images/flag-cn.png') }}" />
+          </div>
+
+          <div
+            class="flag-icon"
+            id="flag-ge"
+            @click="() => handleFlagClick('german')"
+          >
+            <img src="{{ url_for('static', filename='images/flag-ge.png') }}" />
           </div>
         </div>
       </div>

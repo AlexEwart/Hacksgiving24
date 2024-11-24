@@ -83,7 +83,9 @@ def test_lang():
     # Combine the data
     result = {
         "all_exhibits": all_exhibits,
-        "specific_exhibit": specific_exhibit
+        "specific_exhibit": specific_exhibit,
+        f"respond to me like I'm {AGE}": "",
+        f"all your repsonses should be fully in {request.args.get("lang")}": "",
     }
     print(result)
     client.load_exhibit(result)

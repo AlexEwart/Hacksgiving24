@@ -58,14 +58,12 @@ class Client:
         self.base_message = {
             "role": "system",
             "content": """
-                You are a master museum tour guide. You are tasked with giving short and to-the-point answers to questions you are asked.
+                You are a master museum tour guide. You are tasked with giving short and to-the-point answers to questions you are asked. Very importantly, none of your responses should be more than 90 tokens.
                 
                 Summarize the exhibit in responses tailored to the demographic of the individual. 
                 Share fun facts about the exhibit, use the exhibit data to create your responses.
-                Make sure you respond in the appropriate language so that it can be understood by the visitors. 
+                Be sure all your responses are 100% the specified language and the specified language only.
                 Don't give long responses, and don't ask the users questions. Only talk about the exhibit and questions related to the exhibit. For example, if a user asks about the history leading up to the creation of the exhibit, tell them more.
-             
-                The "title" of your response should be the exhibit title, just translated into the desired language.
                 
                 Give your responses in the following JSON format, only including the curly braces and NOT the word json:
                 
@@ -79,7 +77,9 @@ class Client:
         self.is_playing = False
 
     def load_exhibit(self, prompt_data):
-        self.messages.append({"role": "system", "content": json.dumps(prompt_data)})
+        self.messages[0]['content'] += json.dumps(prompt_data)
+        print("LOADING EXHIBIT")
+        print(self.messages[0])
 
     def get_age(self, img_path):
         base64_image = encode_image(img_path)
@@ -111,10 +111,15 @@ class Client:
             model=MODEL,
             messages=self.messages,
             temperature=0.0,
+            max_tokens=90
         )
         answer = response.choices[0].message.content
         self.messages.append({"role": "assistant", "content": answer})
-        self.speak(answer)
+        answer_dict = json.loads(answer)
+
+        # Access the 'body' key
+        answer2 = answer_dict['body']
+        self.speak(answer2)
         return answer
 
     def transcribe(self, audio_path):
@@ -181,7 +186,7 @@ class Client:
         try:
             with self.client.audio.speech.with_streaming_response.create(
                 model="tts-1",
-                voice="alloy",
+                voice="shimmer",
                 input=transcript
             ) as response:
                 response.stream_to_file("output.mp3")
