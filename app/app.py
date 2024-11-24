@@ -10,6 +10,8 @@ from IPython.display import Image, display, Audio, Markdown
 import base64
 import json
 import pandas as pd
+from audiobackend import audioBackend
+from client import Client
 
 
 data = pd.DataFrame()
@@ -18,67 +20,37 @@ def read_data():
     return data
 
 data = read_data()
+audio = audioBackend()
+client = Client()
 # THIS SHOULD BE IN ENVIRONMENT FILE!!
-api_key = ""
-# API KEY IN HERE!!
 
 ## Set the API key and model name
 MODEL="gpt-4o-mini"
-client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY", api_key))
-
+AGE = 2
 # Open the image file and encode it as a base64 string
-def encode_image(image_path):
-    with open(image_path, "rb") as image_file:
-            return base64.b64encode(image_file.read()).decode("utf-8")
 
-IMAGE_PATH = "family.png"
+IMAGE_PATH = "captured_image.jpg"
+AUDIO_PATH = "recording.wav"
 
-def prompt_gpt(img_path, prompt_data):
-    
-    base64_image = encode_image(img_path)
-    response = client.chat.completions.create(
-        model=MODEL,
-        messages=[
-            {"role": "system", "content": """
-                You are a master museum tour guide. You are tasked with giving age and language appropriate descriptions for the exhibits in the museum.
-                
-                You will be given multiple pieces of information from the user:
-             
-                language: your responses should be in this language.
-                exhibit_title: the official title of the exhibit.
-                exhibit_description: brief information about the exhibit
-                exhibit_body: More extensive info about how the exhibit works, etc.
-                Image: an image containing museum visitors.
-            
-                Your task is to summarize the exhibit information in a way that the visitors can understand.
-                When you look at the image, find the youngest person in that image and tailor your response to fit their age.
-                Make sure you respond in the appropriate language so that it can be understood by the visitors.
-                Ensure your responses are less than 3 sentences long.
-
-                Give your responses in the following JSON format, only including the curly braces and NOT the word json:
-             
-                {
-                    "youngest_age": <number>
-                    "info_title": <string>
-                    "info_body": <string>
-                }
-            """},
-            {"role": "user", "content": json.dumps(prompt_data)},
-            {"role": "user", "content": [
-                # {"type": "text", "text": "What's the area of the triangle?"},
-                {"type": "image_url", "image_url": {
-                    "url": f"data:image/png;base64,{base64_image}"}
-                }
-            ]}
-        ],
-        temperature=0.0,
-    )
-    # data = json.loads() # this should be the response we want
-    return response.choices[0].message.content;
 
 # Initialize Flask app and webcam backend
 app = Flask(__name__)
 webcam = webcamBackend()
+
+
+
+
+
+
+def get_age():
+    global AGE
+    print("getting age")
+    AGE = client.get_age(IMAGE_PATH)
+    print(AGE)
+
+def talk(prompt):
+    return client.prompt_gpt(prompt)
+    
 
 @app.after_request
 def add_cors_headers(response):
@@ -87,6 +59,27 @@ def add_cors_headers(response):
     response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
     return response
 
+
+@app.route("/gpt_prompt")
+def test_lang():
+    title = request.args.get("title")
+    # this should be changed to access the database
+    prompt_data = {
+    "language: ": request.args.get("lang"),
+    "age of viewer: ": AGE,
+    "exhibit_title: ": title,
+    "exhibit_description: ": data.loc[title][1],
+    "exhibit_age-range: ": data.loc[title][2],
+    "exhibit_topic-difficulty: ": data.loc[title][3],
+    "exhibit_topics: ": data.loc[title][4],
+    "exhibit_body: ": data.loc[title][8],
+    }
+    print(prompt_data)
+    client.load_exhibit(prompt_data)
+
+    return jsonify(talk("Tell me about the exhibit")), 200
+
+
 # Route to serve the video feed
 @app.route("/video_feed")
 def video_feed():
@@ -94,19 +87,6 @@ def video_feed():
         webcam.get_video_feed(), mimetype="multipart/x-mixed-replace; boundary=frame"
     )
 
-@app.route("/gpt_prompt")
-def test_lang():
-    title = request.args.get("title")
-    # this should be changed to access the database
-    prompt_data = {
-    "language": request.args.get("lang"),
-    "exhibit_title": title,
-    "exhibit_description": data.loc[title][1],
-    "exhibit_body": data.loc[title][8]
-    }
-
-    res = prompt_gpt(IMAGE_PATH, prompt_data)
-    return jsonify(res), 200
 
 @app.route("/stop_feed", methods=["POST"])
 def stop_feed():
@@ -121,51 +101,34 @@ def start_feed():
         {"message": "Video feed started" if success else "Failed to start video feed"}
     )
 
-# @app.route("/initialize", methods=["POST"])
-# def start_feed():
-#     success = webcam.start_webcam()
-#     return jsonify(
-#         {"message": "Video feed started" if success else "Failed to start video feed"}
-#     )
 
 
-
-# @app.route("/capture_image", methods=["POST"])
-# def capture_image():
-#     frame = webcam.capture_frame()
-#     if frame is None:
-#         return jsonify({"error": "Failed to capture image"}), 500
-
-#     temp_image_path = "captured_image.jpg"
-#     cv2.imwrite(temp_image_path, frame)
-
-#     try:
-#         # Analyze the image
-#         analysis = DeepFace.analyze(
-#             img_path=temp_image_path,
-#             actions=['age', 'gender', 'race', 'emotion'],
-#             enforce_detection=False
-#         )
-
-#         # Extract and simplify the analysis
-#         simplified_analysis = {
-#             "age": analysis[0]['age'],
-#             "race": analysis[0]['dominant_race'],
-#             "gender": analysis[0]['dominant_gender'],
-#             "emotion": analysis[0]['dominant_emotion']
-#         }
-
-#         return jsonify({
-#             "message": "Image captured and analyzed successfully",
-#             "analysis": simplified_analysis
-#         }), 200
-
-#     except ValueError as e:
-#         return jsonify({"error": f"No face detected: {str(e)}"}), 400
-#     except Exception as e:
-#         return jsonify({"error": f"DeepFace analysis failed: {str(e)}"}), 500
+@app.route("/capture_image", methods=["POST"])
+def capture_image():
+    frame = webcam.capture_frame()
+    if frame is None:
+        return jsonify({"error": "Failed to capture image"}), 500
+    
+    cv2.imwrite(IMAGE_PATH, frame)
+    get_age()
+    return jsonify({"message": "got image"})
 
 # Homepage route
+
+@app.route("/start_recording", methods=["POST"])
+def start_recording():
+    success = audio.start_recording()
+    if success:
+        return jsonify({"message": "Audio recording started"}), 200
+    else:
+        return jsonify({"error": "Audio is already recording"}), 400
+
+@app.route("/stop_recording", methods=["POST"])
+def stop_recording():
+    success = audio.stop_recording()
+    prompt = client.transcribe(AUDIO_PATH)
+    return jsonify(talk(prompt)), 200
+
 @app.route("/")
 def index():
     return render_template("index.html")

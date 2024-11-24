@@ -5,50 +5,61 @@ import {
 let lastMessage = "";
 
 createApp({
-  delimiters: ["[[", "]]"], // Custom delimiters
   setup() {
     const shouldRender = ref(true); // Use ref to make it reactive
     const language = ref("en");
     const title = ref("Loading...");
     const body = ref("Loading...");
 
-    function handleFlagClick(lang) {
+    async function handleFlagClick(lang) {
       language.value = lang;
       shouldRender.value = false; // Update the value using `.value`
 
-      let req_string = "/gpt_prompt"
-      req_string += "?lang=" + lang
+      // Wait for takePicture to complete
+      await takePicture();
+
+      let req_string = "/gpt_prompt";
+      req_string += "?lang=" + lang;
       // change this to be changed per-terminal
-      req_string += "&title=" + "Build It!"
+      req_string += "&title=" + "Build It!";
+
       fetch(req_string, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
         },
-      }).then((response) => response.json())
-      .then((data) => {
-
-          let objectthing = JSON.parse(data)
-          
-          console.log(objectthing.youngest_age)
-          console.log(objectthing.info_title)
-          console.log(objectthing.info_body)
-    
-          // TODO: updating gui doesnt work for some reason...
-          title.value = objectthing.info_title 
-          body.value = objectthing.info_body
       })
-      
+        .then((response) => response.json())
+        .then((data) => {
+          let objectthing = JSON.parse(data);
+
+          // console.log(objectthing.youngest_age);
+          // console.log(objectthing.info_title);
+          console.log(objectthing.body);
+
+          // TODO: updating gui doesnt work for some reason...
+          title.value = objectthing.info_title;
+          body.value = objectthing.info_body;
+        });
     }
 
-    function returnHome() { 
-      title.value = "Loading..."
-      body.value = "Loading..."
+    async function takePicture() {
+      // Send POST request to capture image and await its completion
+      await fetch("/capture_image", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      console.log("took picture");
+    }
+
+    function returnHome() {
       shouldRender.value = true;
     }
-    function takePicture() {
-      // Send POST request to capture image
-      fetch("/capture_image", {
+
+    function startRecording() {
+      fetch("/start_recording", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -57,26 +68,43 @@ createApp({
         .then((response) => response.json())
         .then((data) => {
           if (data.error) {
-            alert("Failed to capture image: " + data.error);
+            alert("Failed to start audio recording: " + data.error);
           } else {
-            alert("Picture captured and analyzed successfully!");
-            console.log("Analysis Results:", data.analysis);
-
-            // Display the results
-            const results = data.analysis;
-            const resultText = `
-                  Age: ${results.age} \n
-                  Gender: ${results.gender} \n
-                  Race: ${JSON.stringify(results.race)} \n
-                  Emotion: ${JSON.stringify(results.emotion)}
-                `;
-            alert(resultText);
-            alert(data);
+            console.log("Audio recording started");
           }
         })
         .catch((error) => {
-          console.error("Error capturing image:", error);
-          alert("An error occurred while capturing the image.");
+          console.error("Error starting audio recording:", error);
+          alert("An error occurred while starting audio recording.");
+        });
+    }
+
+    function stopRecording() {
+      fetch("/stop_recording", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.error) {
+          } else {
+            console.log("Audio recording stopped and saved");
+            let objectthing = JSON.parse(data);
+
+            // console.log(objectthing.youngest_age);
+            // console.log(objectthing.info_title);
+            console.log(objectthing.body);
+
+            // TODO: updating gui doesnt work for some reason...
+            title.value = objectthing.info_title;
+            body.value = objectthing.info_body;
+          }
+        })
+        .catch((error) => {
+          console.error("Error stopping audio recording:", error);
+          alert("An error occurred while stopping audio recording.");
         });
     }
 
@@ -87,6 +115,8 @@ createApp({
       takePicture,
       language,
       title,
+      startRecording,
+      stopRecording,
       body,
     };
   },
