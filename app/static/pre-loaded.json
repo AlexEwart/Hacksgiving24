@@ -1,0 +1,41 @@
+{
+  "build_it": {
+    "english": {
+      "text": "Build It! This exhibit highlights the scale of machines required for large construction projects. Visitors can learn about the processes involved in creating massive earth-moving machines, including casting, machining, and welding. Did you know that the biggest machines need incredibly strong welds to move millions of tons of rock? This experience showcases the precision and skill required in the construction industry.",
+      "path": "build_it_english.mp3"
+    },
+    "spanish": {
+      "text": "¡Construye! Esta exhibición destaca la escala de las máquinas necesarias para proyectos de construcción a gran escala. Los visitantes pueden aprender sobre los procesos involucrados en la creación de enormes máquinas para mover la tierra, incluyendo la fundición, el mecanizado y la soldadura. ¿Sabías que las máquinas más grandes necesitan soldaduras increíblemente fuertes para mover millones de toneladas de roca? Esta experiencia muestra la precisión y habilidad requeridas en la industria de la construcción.",
+      "path": "build_it_spanish.mp3"
+    },
+    "russian": {
+      "text": "Построй это! — это познавательный опыт, который подчеркивает масштаб машин, необходимых для крупных строительных проектов. Экспозиция демонстрирует процессы литья, механической обработки и сварки, подчеркивая точность и мастерство, необходимые для создания огромных землеройных машин. Интересный факт: выставка объясняет, как литье позволяет внедрять инновации, экономя время и материалы без ущерба для прочности!",
+      "path": "build_it_russian.mp3"
+    },
+    "chinese": {
+      "text": "Build It! 这个展览展示了大型建筑项目所需机器的规模。它强调了铸造、机械加工和焊接等过程，展示了如何制造出能够移动地球的巨大机器。焊接提供了强度，确保机器在移动数百万吨岩石和矿物时不会失败。",
+      "path": "build_it_chinese.mp3"
+    },
+    "arabic": {
+      "text": "جربة تسلط الضوء على حجم الآلات المطلوبة لمشاريع البناء، خاصة الكبيرة منها. تتضمن معلومات عن صب المعادن، والتشغيل، واللحام، حيث يتم تشكيل القطع الضخمة بدقة عالية. الآلات الكبيرة تحتاج إلى لحامات قوية لتحمل الأوزان الثقيلة.",
+      "path": "build_it_arabic.mp3"
+    },
+    "french": {
+      "text": "Construisez-le ! Cette expérience informative met en lumière l'échelle des machines nécessaires aux projets de construction, en particulier les grands projets. Les visiteurs découvrent comment les machines qui déplacent la terre sont fabriquées, y compris les processus de moulage, d'usinage et de soudage. Les machines géantes nécessitent des soudures robustes pour supporter des charges énormes, et chaque pièce est assemblée avec une précision incroyable.",
+      "path": "build_it_french.mp3"
+    },
+    "german": {
+      "text": "Das 'Build It!'-Erlebnis hebt die Größe der Maschinen hervor, die für große Bauprojekte erforderlich sind. Es zeigt den Prozess des Gießens, der Bearbeitung und des Schweißens, um massive Erdbewegungsmaschinen herzustellen. Diese Maschinen benötigen präzise Fertigung und starke Schweißverbindungen, um Millionen von Tonnen Gestein zu bewegen.",
+      "path": "build_it_french.mp3"
+    },
+    "options": [
+      "english",
+      "spanish",
+      "russian",
+      "chinese",
+      "arabic",
+      "french",
+      "german"
+    ]
+  }
+}
