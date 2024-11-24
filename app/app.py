@@ -19,7 +19,7 @@ def read_data():
 
 data = read_data()
 # THIS SHOULD BE IN ENVIRONMENT FILE!!
-api_key = ""
+api_key = "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"
 # API KEY IN HERE!!
 
 ## Set the API key and model name
@@ -43,6 +43,7 @@ def prompt_gpt(img_path, prompt_data):
                 You are a master museum tour guide. You are tasked with giving age and language appropriate descriptions for the exhibits in the museum.
                 
                 You will be given multiple pieces of information from the user:
+             
                 language: your responses should be in this language.
                 exhibit_title: the official title of the exhibit.
                 exhibit_description: brief information about the exhibit
@@ -52,6 +53,7 @@ def prompt_gpt(img_path, prompt_data):
                 Your task is to summarize the exhibit information in a way that the visitors can understand.
                 When you look at the image, find the youngest person in that image and tailor your response to fit their age.
                 Make sure you respond in the appropriate language so that it can be understood by the visitors.
+                Ensure your responses are less than 3 sentences long.
 
                 Give your responses in the following JSON format, only including the curly braces and NOT the word json:
              

@@ -5,6 +5,7 @@ import {
 let lastMessage = "";
 
 createApp({
+  delimiters: ["[[", "]]"], // Custom delimiters
   setup() {
     const shouldRender = ref(true); // Use ref to make it reactive
     const language = ref("en");
@@ -41,6 +42,8 @@ createApp({
     }
 
     function returnHome() { 
+      title.value = "Loading..."
+      body.value = "Loading..."
       shouldRender.value = true;
     }
     function takePicture() {

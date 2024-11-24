@@ -25,6 +25,28 @@ body {
   overflow-x: nowrap;
 }
 
+.info-title {
+  font-family: "Parkinsans", sans-serif;
+  font-size: 8em;
+}
+
+.info-body {
+  font-family: "Parkinsans", sans-serif;
+  font-size: 3em;
+}
+
+#info-screen {
+  display: flex;
+}
+
+#lcol {
+  width: 40%;
+}
+
+#rcol {
+  width: 60%;
+}
+
 .marquee {
   margin: 0 auto;
   white-space: nowrap;

@@ -48,11 +48,19 @@
         </div>
 
         <div id="info-screen" v-if="!shouldRender">
-            <h1>{{ title }}</h1>
-            <p>{{ body }}</p>
-            <p>Language: {{ language }}</p>
-            <button @click="returnHome">Go Back</button>
-            <button id="capture-button" class="btn btn-primary mt-3" @click="takePicture">Take Picture</button>
+            
+
+            <div id="lcol">
+                <h1 class="info-title">[[ title ]]</h1>
+                <button @click="returnHome">Go Back</button>
+                <button id="capture-button" class="btn btn-primary mt-3" @click="takePicture">Take Picture</button>
+            </div>
+            <div id="rcol">
+                <p class="info-body">[[ body ]]</p>
+
+            </div>
+            
+            
             
             <!-- <img
             id="video-stream"
