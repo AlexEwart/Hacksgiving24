@@ -19,7 +19,7 @@ def read_data():
 
 data = read_data()
 # THIS SHOULD BE IN ENVIRONMENT FILE!!
-api_key = "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"
+api_key = ""
 # API KEY IN HERE!!
 
 ## Set the API key and model name
