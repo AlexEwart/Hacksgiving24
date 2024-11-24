@@ -1,121 +1,311 @@
+<!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-    <script type="module" src="{{ url_for('static', filename='js/script.js') }}"></script>
+  <head>
+    <style>
+      /* Moved CSS */
 
+      body {
+        margin: 0;
+        overflow: hidden;
+        background-color: #c8e2f7;
+        font-family: "Parkinsans", sans-serif;
+      }
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="styles.css" type="text/css" />
-    <link href="https://fonts.googleapis.com/css2?family=Gasoek+One&family=Parkinsans:wght@300..800&family=SUSE:wght@100..800&display=swap" rel="stylesheet">
+      /* Background Slideshow */
+      #background-slideshow {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1; /* Ensure it's behind all other content */
+        overflow: hidden;
+        pointer-events: none; /* Prevent interaction with the background */
+        transition: opacity 0.5s ease-in-out; /* Smooth opacity change */
+      }
 
-</head>
-<body>
+      #background-slideshow:after {
+        content: "";
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-size: cover;
+        background-position: center;
+        animation: slideshow 50s steps(1, end) infinite;
+        animation-play-state: running; /* Start animation running */
+      }
+
+      @keyframes slideshow {
+        0% {
+          background-image: url("{{ url_for('static', filename='background/image5.jpg') }}");
+        }
+        25% {
+          background-image: url("{{ url_for('static', filename='background/image2.jpg') }}");
+        }
+        50% {
+          background-image: url("{{ url_for('static', filename='background/image3.jpg') }}");
+        }
+        75% {
+          background-image: url("{{ url_for('static', filename='background/image4.jpg') }}");
+        }
+        100% {
+          background-image: url("{{ url_for('static', filename='background/image1.jpg') }}");
+        }
+      }
+
+      /* Ticker Container (Pink Bar) */
+      #ticker-container {
+        position: relative;
+        width: 100%;
+        height: 50px;
+        background-image: url("{{ url_for('static', filename='explorer.jpg') }}");
+        background-size: cover;
+        background-position: center;
+        color: #ffffff;
+        overflow: hidden;
+      }
+
+      .marquee,
+      .marquee2 {
+        position: absolute;
+        white-space: nowrap;
+        overflow: hidden;
+        width: 100%;
+        font-size: 1.5rem;
+        animation: marquee 15s linear infinite;
+      }
+
+      .marquee2 {
+        animation-delay: -7.5s;
+      }
+
+      @keyframes marquee {
+        from {
+          transform: translateX(100%);
+        }
+        to {
+          transform: translateX(-100%);
+        }
+      }
+
+      /* Flag Container */
+      #flag-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px;
+        padding: 20px;
+      }
+
+      .flag-icon {
+        width: 100px;
+        height: 70px;
+        cursor: pointer;
+      }
+
+      .flag-icon img {
+        width: 100%;
+        height: 100%;
+        border: 2px solid #ffffff;
+        border-radius: 5px;
+        transition: transform 0.3s;
+      }
+
+      .flag-icon:hover img {
+        transform: scale(1.1);
+      }
+
+      /* Info Screen Title */
+      .info-title {
+        text-align: center;
+        color: #1f1a4e;
+        background-color: #d53a7a;
+        padding: 20px;
+        margin: 0;
+        font-size: 2.5rem;
+      }
+
+      /* Info Screen */
+      #info-screen {
+        display: flex;
+        height: calc(100vh - 50px); /* Adjust height to account for ticker */
+      }
+
+      #rcol {
+        width: 70%;
+        background-color: #ffffff;
+        padding: 20px;
+        overflow-y: auto;
+      }
+
+      .info-body {
+        font-size: 1.2rem;
+        color: #1f1a4e;
+      }
+
+      /* Button Styles */
+      #button-container {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .button {
+        background-color: #ffffff;
+        border: 3px solid #1f1a4e;
+        border-radius: 50px;
+        height: 100px;
+        width: 100px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        transition: transform 0.3s, background-color 0.3s;
+      }
+
+      .button img {
+        width: 50%;
+        height: 50%;
+      }
+
+      .button:hover {
+        background-color: #d53a7a;
+        transform: scale(1.05);
+      }
+
+      .button:active {
+        transform: scale(0.95);
+        background-color: #ffd700;
+      }
+      #lcol {
+        width: 30%;
+        background-color: #c8e2f7; /* Fallback color */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background-image: url({{url_for("static", filename= "explore.svg")}});
+        background-repeat: no-repeat; /* Avoid repeating the image */
+        background-size: contain; /* Ensure the whole image is visible */
+        background-position: center; /* Center the image within the element */
+      }
+    </style>
+
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Interactive App</title>
+    <script
+      type="module"
+      src="{{ url_for('static', filename='js/script.js') }}"
+    ></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Parkinsans:wght@300..800&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- Background Slideshow -->
+    <div id="background-slideshow"></div>
+
+    <!-- Main App Content -->
     <div id="app">
-        <div id="lang-select" v-if="shouldRender">
-            <div id="ticker-container">
-                <p class="marquee">
-                    <span>Hello! Hola! Bonjour! يوم جيد 你好! Привет! Hello! Hola! Bonjour! يوم جيد 你好! Привет! Hello! Hola! Bonjour! يوم جيد 你好! Привет! Hello! Hola! Bonjour! يوم جيد 你好! Привет! -&nbsp;</span>
-                </p>
-                <p class="marquee marquee2">
-                    <span>Hello! Hola! Bonjour! يوم جيد 你好! Привет! Hello! Hola! Bonjour! يوم جيد 你好! Привет! Hello! Hola! Bonjour! يوم جيد 你好! Привет! Hello! Hola! Bonjour! يوم جيد 你好! Привет! -&nbsp;</span>
-                </p>
-            </div>
+      <!-- Ticker Container (Pink Bar) -->
+      <div id="ticker-container" v-if="shouldRender">
+        <p class="marquee marquee2">
+          <span>
+            Hello! Hola! Bonjour! يوم جيد 你好! Привет! Hello! Hola! Bonjour!
+            يوم جيد 你好! Привет! Hello! Hola! Bonjour! يوم جيد 你好! Привет!
+          </span>
+        </p>
+      </div>
 
-            <div id="flag-container">
-                <div class="flag-icon" id="flag-en" @click="() => handleFlagClick('en')">
-                    <img src="{{ url_for('static', filename='images/flag-en.png') }}">
-                </div>
-                <div class="flag-icon" id="flag-es" @click="() => handleFlagClick('es')">
-                    <img src="{{ url_for('static', filename='images/flag-es.png') }}">
-                </div>
-                <div class="flag-icon" id="flag-fr" @click="() => handleFlagClick('fr')">
-                    <img src="{{ url_for('static', filename='images/flag-fr.png') }}">
-                </div>
-                <div class="flag-icon" id="flag-ar" @click="() => handleFlagClick('ar')">
-                    <img src="{{ url_for('static', filename='images/flag-ar.png') }}">
-                </div>
-                <div class="flag-icon" id="flag-ru" @click="() => handleFlagClick('ru')">
-                    <img src="{{ url_for('static', filename='images/flag-ru.png') }}">
-                </div>
-                <div class="flag-icon" id="flag-cn" @click="() => handleFlagClick('cn')">
-                    <img src="{{ url_for('static', filename='images/flag-cn.png') }}">
-                </div>
-            </div>
+      <!-- Language Selection -->
+      <div id="lang-select" v-if="shouldRender">
+        <div id="flag-container">
+          <div
+            class="flag-icon"
+            id="flag-en"
+            @click="() => handleFlagClick('english')"
+          >
+            <img src="{{ url_for('static', filename='images/flag-en.png') }}" />
+          </div>
+          <div
+            class="flag-icon"
+            id="flag-es"
+            @click="() => handleFlagClick('española')"
+          >
+            <img src="{{ url_for('static', filename='images/flag-es.png') }}" />
+          </div>
+          <div
+            class="flag-icon"
+            id="flag-fr"
+            @click="() => handleFlagClick('française')"
+          >
+            <img src="{{ url_for('static', filename='images/flag-fr.png') }}" />
+          </div>
+          <div
+            class="flag-icon"
+            id="flag-ar"
+            @click="() => handleFlagClick('الأسبانية')"
+          >
+            <img src="{{ url_for('static', filename='images/flag-ar.png') }}" />
+          </div>
+          <div
+            class="flag-icon"
+            id="flag-ru"
+            @click="() => handleFlagClick('испанский')"
+          >
+            <img src="{{ url_for('static', filename='images/flag-ru.png') }}" />
+          </div>
+          <div
+            class="flag-icon"
+            id="flag-cn"
+            @click="() => handleFlagClick('西班牙语')"
+          >
+            <img src="{{ url_for('static', filename='images/flag-cn.png') }}" />
+          </div>
         </div>
-        <h1 class="info-title" v-if="!shouldRender">[[ title ]]</h1>
-        <div id="info-screen" v-if="!shouldRender">
-            <div id="lcol">
-                
-                <div id="button-container">
-                    
-                    <!-- <button id="capture-button" class="btn btn-primary mt-3" @click="takePicture">Take Picture</button> -->
-                    <button
-                            class="button"
-                    id="record-button"
-                    class="btn btn-primary mt-3"
-                    @mousedown="startRecording"
-                    @mouseup="stopRecording"
-                    >
-                        <img src="{{ url_for('static', filename='images/mic.png') }}">
-                    </button>
-                    <button class="button" @click="returnHome">
-                        <img src="{{ url_for('static', filename='images/back.png') }}">
-                    </button>
-                </div>
+      </div>
+
+      <!-- Info Screen -->
+      <div v-else>
+        <h1 class="info-title">[[ title ]]</h1>
+        <div id="info-screen">
+          <div
+            id="lcol"
+            style="background-image: url({{ url_for('static', filename='explorer_vertical.jpg') }});"
+          >
+            <div id="button-container">
+              <button
+                class="button"
+                id="record-button"
+                @mousedown="startRecording"
+                @mouseup="stopRecording"
+              >
+                <img src="{{ url_for('static', filename='images/mic.png') }}" />
+              </button>
+              <button class="button" @click="toggleMute">
+                <img
+                  src="{{ url_for('static', filename='images/mute.png') }}"
+                />
+              </button>
+              <button class="button" @click="returnHome">
+                <img
+                  src="{{ url_for('static', filename='images/back.png') }}"
+                />
+              </button>
             </div>
-            <div id="rcol">
-                <p class="info-body">[[ body ]]</p>
-
-            </div>
-            
-            <!-- <img
-            id="video-stream"
-            src="{{ url_for('video_feed') }}"
-            width="640"
-            height="480"
-            /> -->
-            <!-- <br />
-            <button type="button" class="btn btn-success" onclick="startVideoFeed()">
-            Start Video Feed
-            </button>
-            <button type="button" class="btn btn-danger" onclick="stopVideoFeed()">
-            Stop Video Feed
-            </button> -->
-
-            <!-- <script id="video">
-            function stopVideoFeed() {
-                // Send POST request to stop the feed
-                fetch("/stop_feed", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                });
-                // Keep the src unchanged so the last frame remains visible
-            }
-
-            function startVideoFeed() {
-                // Send POST request to start the feed
-                fetch("/start_feed", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                }).then(() => {
-                // Temporarily clear the video stream and reset the src
-                const videoStream = document.getElementById("video-stream");
-                videoStream.src = ""; // Clear the src temporarily
-                setTimeout(() => {
-                    videoStream.src = "/video_feed"; // Reset src to start feed
-                }, 100); // Small delay to ensure feed is restarted
-                });
-            }
-            </script>
-                </div>
-            </div> -->
-</body>
+          </div>
+          <div id="rcol">
+            <p class="info-body">[[ body ]]</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
 </html>

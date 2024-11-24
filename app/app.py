@@ -12,7 +12,7 @@ import json
 import pandas as pd
 from audiobackend import audioBackend
 from client import Client
-
+import threading
 
 data = pd.DataFrame()
 def read_data():
@@ -27,6 +27,7 @@ client = Client()
 ## Set the API key and model name
 MODEL="gpt-4o-mini"
 AGE = 2
+latest = "loading response"
 # Open the image file and encode it as a base64 string
 
 IMAGE_PATH = "captured_image.jpg"
@@ -44,7 +45,9 @@ def get_age():
     print(AGE)
 
 def talk(prompt):
-    return client.prompt_gpt(prompt)
+    
+    answer = client.prompt_gpt(prompt)
+    return answer
     
 
 @app.after_request
@@ -59,20 +62,52 @@ def add_cors_headers(response):
 def test_lang():
     title = request.args.get("title")
     # this should be changed to access the database
-    prompt_data = {
-    "language: ": request.args.get("lang"),
-    "age of viewer: ": AGE,
-    "exhibit_title: ": title,
-    "exhibit_description: ": data.loc[title][1],
-    "exhibit_age-range: ": data.loc[title][2],
-    "exhibit_topic-difficulty: ": data.loc[title][3],
-    "exhibit_topics: ": data.loc[title][4],
-    "exhibit_body: ": data.loc[title][8],
+    print(request.args.get("lang"))
+    specific_exhibit = {
+        "language": request.args.get("lang"),
+        "age_of_viewer": AGE,
+        "exhibit_title": title,
+        "exhibit_description": data.loc[title][1],
+        "exhibit_age_range": data.loc[title][2],
+        "exhibit_topic_difficulty": data.loc[title][3],
+        "exhibit_topics": data.loc[title][4],
+        "exhibit_body": data.loc[title][8],
     }
-    print(prompt_data)
-    client.load_exhibit(prompt_data)
 
-    return jsonify(talk("Tell me about the exhibit")), 200
+    # Create a JSON for all exhibits with title and description
+    all_exhibits = [
+        {"exhibit_title": exhibit, "exhibit_description": row[1]} 
+        for exhibit, row in data.iterrows()
+    ]
+
+    # Combine the data
+    result = {
+        "all_exhibits": all_exhibits,
+        "specific_exhibit": specific_exhibit
+    }
+    print(result)
+    client.load_exhibit(result)
+    answer = talk("Tell me about the exhibit")
+    global latest
+    latest = answer
+    
+    return jsonify(answer), 200
+
+
+@app.route("/toggle")
+def toggle():
+    print("TOGGLING")
+    global client
+    if client.is_audio_playing():
+        client.stop_all_audio()
+        status = "stopped"
+    else:
+        client.play_audio()
+        status = "playing"
+    return jsonify({"message": f"Audio is now {status}"}), 200
+
+
+
 
 
 # Route to serve the video feed
@@ -81,6 +116,12 @@ def video_feed():
     return Response(
         webcam.get_video_feed(), mimetype="multipart/x-mixed-replace; boundary=frame"
     )
+
+@app.route("/return")
+def return_home():
+    client = client.reset()
+    
+    return jsonify({"message": "Video feed stopped"})
 
 
 @app.route("/stop_feed", methods=["POST"])
@@ -120,11 +161,27 @@ def start_recording():
 
 @app.route("/stop_recording", methods=["POST"])
 def stop_recording():
-    success = audio.stop_recording()
-    prompt = client.transcribe(AUDIO_PATH)
-    if(prompt is None):
+    data = request.get_json()  # Get JSON data from the request
+    recently_started = data.get("recentlyStarted", True)  # Default to True if not provided
+    print("RECENTLY:")
+    print(recently_started)
+
+    success = audio.stop_recording(recently_started)
+
+    # Handle the case where stopRecording was called within 0.5 seconds of startRecording
+    if not recently_started:
+        prompt = client.transcribe(AUDIO_PATH)
+    else:
+        return jsonify({"error": "could not stop"}), 200
+    
+
+    if prompt is None:
         prompt = "unintelligible"
-    return jsonify(talk(prompt)), 200
+        
+    answer = talk(prompt)
+
+    return jsonify(answer), 200
+
 
 @app.route("/")
 def index():
@@ -132,5 +189,3 @@ def index():
 
 if __name__ == "__main__":
     app.run(debug=True)
-
-# %%

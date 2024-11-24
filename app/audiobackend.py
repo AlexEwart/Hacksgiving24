@@ -35,7 +35,7 @@ class audioBackend:
             while self.recording:
                 sd.sleep(100)
 
-    def stop_recording(self):
+    def stop_recording(self, ignore):
         if not self.recording:
             print("Not recording")
             return False
@@ -43,7 +43,8 @@ class audioBackend:
         self.recording = False
         self.thread.join()
         print("Recording stopped")
-        self.save_recording()
+        if not ignore:
+            self.save_recording()
         return True
 
     def save_recording(self):

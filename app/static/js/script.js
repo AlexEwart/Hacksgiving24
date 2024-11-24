@@ -2,7 +2,10 @@ import {
   createApp,
   ref,
 } from "https://unpkg.com/vue@3/dist/vue.esm-browser.js";
+
 let lastMessage = "";
+let lastStartRecordingTime = 0; // Timestamp to track last startRecording call
+let recordingTimeout = null; // Timeout ID to handle returnHome after 30 seconds
 
 createApp({
   delimiters: ["[[", "]]"], // Custom delimiters
@@ -11,10 +14,25 @@ createApp({
     const language = ref("en");
     const title = ref("Loading...");
     const body = ref("Loading...");
+    const isSlideshowActive = ref(true); // Track slideshow state
+
+    function toggleSlideshow(active) {
+      const slideshowElement = document.getElementById("background-slideshow");
+      if (slideshowElement) {
+        if (active) {
+          slideshowElement.style.animation = ""; // Resume animation
+          slideshowElement.style.opacity = "1"; // Make it visible again
+        } else {
+          slideshowElement.style.animation = "none"; // Stop animation
+          slideshowElement.style.opacity = "0.5"; // Dim it for a clear UI
+        }
+      }
+    }
 
     async function handleFlagClick(lang) {
       language.value = lang;
       shouldRender.value = false; // Update the value using `.value`
+      toggleSlideshow(false); // Stop the slideshow
 
       // Wait for takePicture to complete
       await takePicture();
@@ -34,8 +52,6 @@ createApp({
         .then((data) => {
           let objectthing = JSON.parse(data);
 
-          // console.log(objectthing.youngest_age);
-          // console.log(objectthing.info_title);
           console.log(objectthing.body);
 
           title.value = objectthing.title;
@@ -55,12 +71,39 @@ createApp({
     }
 
     function returnHome() {
+      fetch("/return", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
       title.value = "Loading...";
       body.value = "Loading...";
       shouldRender.value = true;
+      toggleSlideshow(true); // Resume the slideshow
+    }
+
+    function toggleMute() {
+      fetch("/toggle", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
     }
 
     function startRecording() {
+      lastStartRecordingTime = Date.now(); // Update timestamp when startRecording is called
+
+      // Clear any existing timeout to prevent duplicate calls to returnHome
+      if (recordingTimeout) clearTimeout(recordingTimeout);
+
+      // Set a timeout to call returnHome after 30 seconds
+      recordingTimeout = setTimeout(() => {
+        console.log("30 seconds elapsed, returning home.");
+        returnHome();
+      }, 30000);
+
       fetch("/start_recording", {
         method: "POST",
         headers: {
@@ -82,11 +125,17 @@ createApp({
     }
 
     function stopRecording() {
+      const wasRecentlyStarted = Date.now() - lastStartRecordingTime >= 500;
+
+      // Clear the timeout as the recording is being stopped
+      if (recordingTimeout) clearTimeout(recordingTimeout);
+
       fetch("/stop_recording", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
+        body: JSON.stringify({ recentlyStarted: !wasRecentlyStarted }), // Pass false if called within 0.5 seconds
       })
         .then((response) => response.json())
         .then((data) => {
@@ -95,11 +144,9 @@ createApp({
             console.log("Audio recording stopped and saved");
             let objectthing = JSON.parse(data);
 
-            // console.log(objectthing.youngest_age);
-            // console.log(objectthing.info_title);
             console.log(objectthing.body);
 
-            // TODO: updating gui doesnt work for some reason...
+            // Update the UI with the response body
             body.value = objectthing.body;
           }
         })
@@ -115,6 +162,7 @@ createApp({
       returnHome,
       takePicture,
       language,
+      toggleMute,
       title,
       startRecording,
       stopRecording,
@@ -122,34 +170,3 @@ createApp({
     };
   },
 }).mount("#app");
-
-// function stopVideoFeed() {
-//   // Send POST request to stop the feed
-//   fetch("/stop_feed", {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//   });
-//   // Keep the src unchanged so the last frame remains visible
-// }
-// function handleFlagClick(lang) {
-//   alert(lang);
-// }
-
-// function startVideoFeed() {
-//   // Send POST request to start the feed
-//   fetch("/start_feed", {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//   }).then(() => {
-//     // Temporarily clear the video stream and reset the src
-//     const videoStream = document.getElementById("video-stream");
-//     videoStream.src = ""; // Clear the src temporarily
-//     setTimeout(() => {
-//       videoStream.src = "/video_feed"; // Reset src to start feed
-//     }, 100); // Small delay to ensure feed is restarted
-//   });
-// }
