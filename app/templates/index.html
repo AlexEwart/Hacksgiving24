@@ -68,8 +68,17 @@
         overflow: hidden;
       }
 
+      #marquee-container {
+        width: 30%;
+        position: absolute;
+        left:50%;
+        overflow-x: hidden;
+        height: 100px;
+      }
+
       .marquee,
       .marquee2 {
+        margin-top: 2%;
         position: absolute;
         white-space: nowrap;
         overflow: hidden;
@@ -142,8 +151,9 @@
       }
 
       .info-body {
-        font-size: 1.2rem;
+        font-size: 3rem;
         color: #1f1a4e;
+        margin-top: 0px;
       }
 
       /* Button Styles */
@@ -157,8 +167,8 @@
         background-color: #ffffff;
         border: 3px solid #1f1a4e;
         border-radius: 50px;
-        height: 100px;
-        width: 100px;
+        height: 200px;
+        width: 200px;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -187,11 +197,34 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        background-image: url({{url_for("static", filename= "explore.svg")}});
+        background-image: url('{{url_for("static", filename= "explore.svg")}}');
         background-repeat: no-repeat; /* Avoid repeating the image */
-        background-size: contain; /* Ensure the whole image is visible */
+        background-size: 100% 100%;
         background-position: center; /* Center the image within the element */
       }
+
+
+      /* width */
+::-webkit-scrollbar {
+  width: 20px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background-color: lightgray;
+  border-radius: 10px;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #d53a7a; 
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #b30000; 
+}
     </style>
 
     <meta charset="UTF-8" />
@@ -216,12 +249,20 @@
     <div id="app">
       <!-- Ticker Container (Pink Bar) -->
       <div id="ticker-container" v-if="shouldRender">
-        <p class="marquee marquee2">
-          <span>
-            Hello! Hola! Bonjour! يوم جيد 你好! Привет! Hello! Hola! Bonjour!
-            يوم جيد 你好! Привет! Hello! Hola! Bonjour! يوم جيد 你好! Привет!
-          </span>
-        </p>
+        <div id="marquee-container">
+            <p class="marquee ">
+                <span>
+                  Hello! Hola! Bonjour! يوم جيد 你好! Привет! Hello! Hola! Bonjour!
+                  يوم جيد 你好! Привет! Hello! Hola! Bonjour! يوم جيد 你好! Привет!
+                </span>
+              </p>
+            <p class="marquee marquee2">
+                <span>
+                  Hello! Hola! Bonjour! يوم جيد 你好! Привет! Hello! Hola! Bonjour!
+                  يوم جيد 你好! Привет! Hello! Hola! Bonjour! يوم جيد 你好! Привет!
+                </span>
+              </p>
+        </div>
       </div>
 
       <!-- Language Selection -->
@@ -291,7 +332,7 @@
               </button>
               <button class="button" @click="toggleMute">
                 <img
-                  src="{{ url_for('static', filename='images/mute.png') }}"
+                  src="{{ url_for('static', filename='images/speaker.png') }}"
                 />
               </button>
               <button class="button" @click="returnHome">

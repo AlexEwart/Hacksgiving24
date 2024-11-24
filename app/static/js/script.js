@@ -16,6 +16,24 @@ createApp({
     const body = ref("Loading...");
     const isSlideshowActive = ref(true); // Track slideshow state
 
+    const translations = {
+      english: "I'm Listening! Let go of the microphone button to see my response.",
+      española: "¡Estoy escuchando! Suelta el botón del micrófono para ver mi respuesta.",
+      française: "J'écoute ! Relâchez le bouton du microphone pour voir ma réponse.",
+      الأسبانية: "أنا أستمع! اترك زر الميكروفون لترى ردي.",
+      испанский: "Я слушаю! Отпустите кнопку микрофона, чтобы увидеть мой ответ.",
+      西班牙语: "我在听！松开麦克风按钮查看我的回复。"
+    };
+
+    const translations2 = {
+      english: "Give me a few seconds to think...",
+      española: "Dame unos segundos para pensar...",
+      française: "Donnez-moi quelques secondes pour réfléchir...",
+      الأسبانية: "أعطني بضع ثوانٍ للتفكير...",
+      испанский: "Дайте мне несколько секунд, чтобы подумать...",
+      西班牙语: "给我几秒钟思考一下..."
+    };
+
     function toggleSlideshow(active) {
       const slideshowElement = document.getElementById("background-slideshow");
       if (slideshowElement) {
@@ -93,6 +111,9 @@ createApp({
     }
 
     function startRecording() {
+      body.value = translations[language.value];
+
+
       lastStartRecordingTime = Date.now(); // Update timestamp when startRecording is called
 
       // Clear any existing timeout to prevent duplicate calls to returnHome
@@ -125,6 +146,8 @@ createApp({
     }
 
     function stopRecording() {
+      body.value = translations2[language.value];
+      
       const wasRecentlyStarted = Date.now() - lastStartRecordingTime >= 500;
 
       // Clear the timeout as the recording is being stopped
